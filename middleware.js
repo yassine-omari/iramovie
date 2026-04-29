@@ -2,6 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 
 export async function middleware(request) {
+  const { pathname } = request.nextUrl;
+
+  // Let the callback route handle itself — never intercept it
+  if (pathname.startsWith("/auth/callback")) {
+    return NextResponse.next();
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -30,22 +37,24 @@ export async function middleware(request) {
   } = await supabase.auth.getUser();
 
   const isAuthPage =
-    request.nextUrl.pathname === "/login" ||
-    request.nextUrl.pathname === "/signup";
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/auth/reset-password";
 
-  const isProtectedPage = request.nextUrl.pathname.startsWith("/home");
+  const isProtectedPage = pathname.startsWith("/home");
 
-  // Unauthenticated user trying to access protected page
   if (!user && isProtectedPage) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Authenticated user trying to access login or signup — redirect to home
   if (user && isAuthPage) {
-    return NextResponse.redirect(new URL("/home", request.url));
+    const redirectResponse = NextResponse.redirect(
+      new URL("/home", request.url),
+    );
+    redirectResponse.headers.set("Cache-Control", "no-store, max-age=0");
+    return redirectResponse;
   }
 
-  // Force browser to never cache auth pages and protected pages
   if (isAuthPage || isProtectedPage) {
     supabaseResponse.headers.set("Cache-Control", "no-store, max-age=0");
   }
@@ -58,3 +67,4 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
+s
