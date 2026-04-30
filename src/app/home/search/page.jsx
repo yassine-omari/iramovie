@@ -1,6 +1,5 @@
 import { searchMovies } from "../../../../lib/tmdb";
 import MoviesGrid from "@/app/components/movieGrid";
-import Navbar from "@/app/components/navbar";
 import { createClient } from "../../../../lib/server";
 import { redirect } from "next/navigation";
 
@@ -18,7 +17,6 @@ export default async function SearchPage({ searchParams }) {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      <Navbar user={user} />
 
       {/* Results header */}
       {q && (
