@@ -55,7 +55,8 @@ export default function Navbar({ user }) {
     .slice(0, 2);
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10 px-4 md:px-8 py-2.5 flex items-center justify-between gap-4">
+    <nav className="sticky top-0 z-40 w-full bg-[#0a0a0a]/90 backdrop-blur-sm border-b border-white/10 px-4 md:px-8 py-2.5 flex items-center justify-between gap-4">
+
       {/* Left — Logo + Name */}
       <a href="/" className="flex items-center gap-2.5 shrink-0">
         <IramoLogo />
