@@ -55,16 +55,32 @@ export default function Navbar({ user }) {
     .slice(0, 2);
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md border-b border-gray-200 px-4 md:px-8 py-2.5 flex items-center justify-between gap-4">
+    <nav className="sticky top-0 z-40 w-full bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10 px-4 md:px-8 py-2.5 flex items-center justify-between gap-4">
       {/* Left — Logo + Name */}
       <a href="/" className="flex items-center gap-2.5 shrink-0">
         <IramoLogo />
-        <span className="text-lg font-bold text-gray-900 tracking-tight hidden sm:block">
+        <span className="text-lg font-bold text-white tracking-tight hidden sm:block">
           iramovie
         </span>
       </a>
 
-      {/* Center — Search */}
+      {/* Center — Nav links + Search */}
+      <div className="flex items-center gap-1 shrink-0 hidden md:flex">
+        {[
+          { label: "Popular", href: "/home/popular" },
+          { label: "Top Rated", href: "/home/top-rated" },
+          { label: "Upcoming", href: "/home/upcoming" },
+        ].map(({ label, href }) => (
+          <a
+            key={href}
+            href={href}
+            className="text-sm font-medium text-gray-400 hover:text-white hover:bg-white/10 px-3 py-1.5 rounded-xl transition-colors duration-150 whitespace-nowrap"
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+
       <div className="flex-1 min-w-0">
         <SearchBar onSearch={handleSearch} />
       </div>
@@ -73,20 +89,20 @@ export default function Navbar({ user }) {
       <div className="relative shrink-0">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="flex items-center gap-2 hover:bg-gray-100 rounded-xl px-2.5 py-1.5 transition-colors duration-150"
+          className="flex items-center gap-2 hover:bg-white/10 rounded-xl px-2.5 py-1.5 transition-colors duration-150"
         >
           {avatarUrl ? (
             <img
               src={avatarUrl}
               alt="Avatar"
-              className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200"
+              className="w-8 h-8 rounded-full object-cover ring-2 ring-white/20"
             />
           ) : (
             <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-semibold">
               {initials}
             </div>
           )}
-          <span className="text-sm font-medium text-gray-700 hidden md:block max-w-[120px] truncate">
+          <span className="text-sm font-medium text-gray-300 hidden md:block max-w-[120px] truncate">
             {name}
           </span>
           <ChevronIcon open={menuOpen} />
@@ -95,23 +111,22 @@ export default function Navbar({ user }) {
         {/* Dropdown */}
         {menuOpen && (
           <>
-            {/* Backdrop */}
             <div
               className="fixed inset-0 z-40"
               onClick={() => setMenuOpen(false)}
             />
-            <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden z-50">
-              <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
-                <p className="text-[11px] text-gray-400 uppercase tracking-wide font-medium mb-0.5">
+            <div className="absolute right-0 mt-2 w-52 bg-[#111111] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50">
+              <div className="px-4 py-3 border-b border-white/10 bg-white/5">
+                <p className="text-[11px] text-gray-500 uppercase tracking-wide font-medium mb-0.5">
                   Signed in as
                 </p>
-                <p className="text-sm font-semibold text-gray-800 truncate">
+                <p className="text-sm font-semibold text-gray-200 truncate">
                   {user?.email}
                 </p>
               </div>
               <button
                 onClick={handleSignOut}
-                className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors duration-150 font-medium"
+                className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-150 font-medium"
               >
                 Sign out
               </button>

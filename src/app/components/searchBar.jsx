@@ -16,13 +16,13 @@ export default function SearchBar({ onSearch }) {
       onSubmit={handleSubmit}
       className={`
         flex items-center gap-2 w-full max-w-lg mx-4
-        bg-gray-100 rounded-2xl px-4 py-2
+        bg-white/10 rounded-2xl px-4 py-2
         border transition-all duration-200
-        ${focused ? "border-blue-500 bg-white shadow-sm" : "border-transparent"}
+        ${focused ? "border-blue-500 bg-white/15" : "border-transparent"}
       `}
     >
       <svg
-        className="w-4 h-4 text-gray-400 shrink-0"
+        className="w-4 h-4 text-gray-500 shrink-0"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -42,14 +42,14 @@ export default function SearchBar({ onSearch }) {
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        className="flex-1 bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400"
+        className="flex-1 bg-transparent outline-none text-sm text-white placeholder-gray-500"
       />
 
       {query && (
         <button
           type="button"
           onClick={() => setQuery("")}
-          className="text-gray-400 hover:text-gray-600 transition text-lg leading-none"
+          className="text-gray-500 hover:text-gray-300 transition text-lg leading-none"
           aria-label="Clear"
         >
           ×
