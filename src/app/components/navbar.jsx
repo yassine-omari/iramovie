@@ -3,6 +3,7 @@
 import { createClient } from "../../../lib/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import SearchBar from "./searchBar";
 
 function IramoLogo() {
   return (
@@ -13,15 +14,12 @@ function IramoLogo() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Outer hexagon shape */}
       <polygon
         points="16,2 28,9 28,23 16,30 4,23 4,9"
         fill="#2563EB"
         stroke="none"
       />
-      {/* Letter I — vertical bar */}
       <rect x="14.5" y="9" width="3" height="14" rx="1.5" fill="white" />
-      {/* Accent dot top right */}
       <circle cx="22" cy="10" r="2.5" fill="#60A5FA" />
     </svg>
   );
@@ -36,6 +34,10 @@ export default function Navbar({ user }) {
     await supabase.auth.signOut();
     window.location.href = "/login";
   }
+
+  const handleSearch = (query) => {
+    router.push(`/home/search?q=${encodeURIComponent(query)}`);
+  };
 
   const name =
     user?.user_metadata?.full_name ??
@@ -53,33 +55,38 @@ export default function Navbar({ user }) {
     .slice(0, 2);
 
   return (
-    <nav className="w-full bg-white border-b border-gray-200 px-4 md:px-8 py-3 flex items-center justify-between">
+    <nav className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md border-b border-gray-200 px-4 md:px-8 py-2.5 flex items-center justify-between gap-4">
       {/* Left — Logo + Name */}
-      <div className="flex items-center gap-2.5">
+      <a href="/" className="flex items-center gap-2.5 shrink-0">
         <IramoLogo />
-        <span className="text-xl font-bold text-gray-900 tracking-tight">
-          iramo
+        <span className="text-lg font-bold text-gray-900 tracking-tight hidden sm:block">
+          iramovie
         </span>
+      </a>
+
+      {/* Center — Search */}
+      <div className="flex-1 min-w-0">
+        <SearchBar onSearch={handleSearch} />
       </div>
 
       {/* Right — User menu */}
-      <div className="relative">
+      <div className="relative shrink-0">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="flex items-center gap-2.5 hover:bg-gray-100 rounded-xl px-3 py-1.5 transition"
+          className="flex items-center gap-2 hover:bg-gray-100 rounded-xl px-2.5 py-1.5 transition-colors duration-150"
         >
           {avatarUrl ? (
             <img
               src={avatarUrl}
               alt="Avatar"
-              className="w-8 h-8 rounded-full object-cover"
+              className="w-8 h-8 rounded-full object-cover ring-2 ring-gray-200"
             />
           ) : (
             <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-semibold">
               {initials}
             </div>
           )}
-          <span className="text-sm font-medium text-gray-700 hidden sm:block">
+          <span className="text-sm font-medium text-gray-700 hidden md:block max-w-[120px] truncate">
             {name}
           </span>
           <ChevronIcon open={menuOpen} />
@@ -87,20 +94,29 @@ export default function Navbar({ user }) {
 
         {/* Dropdown */}
         {menuOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-50">
-            <div className="px-4 py-3 border-b border-gray-100">
-              <p className="text-xs text-gray-400">Signed in as</p>
-              <p className="text-sm font-medium text-gray-800 truncate">
-                {user?.email}
-              </p>
+          <>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setMenuOpen(false)}
+            />
+            <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-2xl shadow-xl overflow-hidden z-50">
+              <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
+                <p className="text-[11px] text-gray-400 uppercase tracking-wide font-medium mb-0.5">
+                  Signed in as
+                </p>
+                <p className="text-sm font-semibold text-gray-800 truncate">
+                  {user?.email}
+                </p>
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors duration-150 font-medium"
+              >
+                Sign out
+              </button>
             </div>
-            <button
-              onClick={handleSignOut}
-              className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition"
-            >
-              Sign out
-            </button>
-          </div>
+          </>
         )}
       </div>
     </nav>
@@ -110,11 +126,11 @@ export default function Navbar({ user }) {
 function ChevronIcon({ open }) {
   return (
     <svg
-      className={`w-4 h-4 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
+      className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth={2.5}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
     </svg>
