@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 function TopResult({ movie }) {
   return (
-    <div className="relative w-full h-[70vh] min-h-[340px] max-h-[480px] overflow-hidden">
+    <div className="relative w-full h-[100vh] min-h-[340px] max-h-[600px] overflow-hidden">
       {/* Backdrop */}
       {movie.backdrop_path ? (
         <img
