@@ -78,7 +78,7 @@ export default function Navbar({ user }) {
   return (
     <nav className="sticky top-0 z-40 w-full bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10">
       {/* Main row */}
-      <div className="px-4 md:px-8 py-2.5 flex items-center gap-3">
+      <div className="px-4 md:px-8 py-2.5 flex items-center justify-between gap-3">
         {/* Logo */}
         <a href="/" className="flex items-center gap-2 shrink-0">
           <IramoLogo />
@@ -88,7 +88,8 @@ export default function Navbar({ user }) {
         </a>
 
         {/* Nav links — always visible */}
-        <div className="flex items-center gap-0.5 flex-1">
+        {/* Nav links — always visible */}
+        <div className="flex items-center gap-0.5">
           {NAV_LINKS.map(({ label, href }) => (
             <a
               key={href}
@@ -101,7 +102,7 @@ export default function Navbar({ user }) {
         </div>
 
         {/* Search bar — desktop only */}
-        <div className="hidden md:flex flex-1 max-w-md">
+        <div className="hidden md:flex flex-1 px-8">
           <SearchBar onSearch={handleSearch} />
         </div>
 
