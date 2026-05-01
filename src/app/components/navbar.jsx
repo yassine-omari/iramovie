@@ -101,7 +101,7 @@ export default function Navbar({ user }) {
         </div>
 
         {/* Search bar — desktop only */}
-        <div className="hidden md:flex w-64 lg:w-80">
+        <div className="hidden md:flex flex-1 max-w-md">
           <SearchBar onSearch={handleSearch} />
         </div>
 
