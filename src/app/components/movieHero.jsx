@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function MovieHero({ movie, runtime, inWatchlist, userId }) {
   const [watchlisted, setWatchlisted] = useState(inWatchlist);
@@ -112,6 +113,19 @@ export default function MovieHero({ movie, runtime, inWatchlist, userId }) {
               >
                 {watchlisted ? "✓ In Watchlist" : "+ Add to Watchlist"}
               </button>
+              <Link
+                href={`/home/movie/${movie.id}/watch`}
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all duration-150"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                Watch Now
+              </Link>
             </div>
           </div>
         </div>
