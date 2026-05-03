@@ -21,8 +21,6 @@ export default async function HomePage() {
   return (
     <main>
       <Hero movies={popular.results} />
-      <Genres genres={genresData.genres ?? []} />
-      <div className="mx-4 md:mx-10 border-t border-white/5" />
       <MovieRow
         title="🔥 Popular Right Now"
         movies={popular.results}
@@ -40,6 +38,8 @@ export default async function HomePage() {
         movies={upcoming.results}
         href="/home/upcoming"
       />
+      <div className="mx-4 md:mx-10 border-t border-white/5" />
+      <Genres genres={genresData.genres ?? []} />
       <TagLine />
     </main>
   );
