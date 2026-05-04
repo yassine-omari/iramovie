@@ -4,6 +4,8 @@ import { createClient } from "../../../lib/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SearchBar from "./searchBar";
+import { searchMovies } from "../../../lib/tmdb";
+import Link from "next/link";
 
 const NAV_LINKS = [
   { label: "Popular", href: "/home/popular" },
@@ -56,9 +58,15 @@ export default function Navbar({ user }) {
     window.location.href = "/login";
   }
 
-  const handleSearch = (query) => {
-    router.push(`/home/search?q=${encodeURIComponent(query)}`);
-    setSearchOpen(false);
+  const handleSearch = async (query) => {
+    const res = await fetch(
+      `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
+    );
+    const data = await res.json();
+    const topResult = data.results?.[0];
+    if (topResult) {
+      router.push(`/home/movie/${topResult.id}`);
+    }
   };
 
   const name =
@@ -177,6 +185,12 @@ export default function Navbar({ user }) {
                     {user?.email}
                   </p>
                 </div>
+                <Link
+                  href="/home/library"
+                  className="block w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-white/10 transition-colors duration-150 font-medium"
+                >
+                  My Library
+                </Link>
                 <button
                   onClick={handleSignOut}
                   className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors duration-150 font-medium"

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function hero({ movies }) {
+export default function Hero({ movies }) {
   const candidates = movies.filter((m) => m.backdrop_path).slice(0, 10);
   const movie = candidates[Math.floor(Math.random() * candidates.length)];
   if (!movie) return null;

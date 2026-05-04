@@ -9,6 +9,7 @@ export default function SearchBar({ onSearch }) {
     e.preventDefault();
     if (!query.trim()) return;
     onSearch(query);
+    setQuery("");
   };
 
   return (

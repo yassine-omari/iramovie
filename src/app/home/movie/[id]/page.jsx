@@ -27,9 +27,14 @@ export default async function MoviePage({ params }) {
     prisma.user.findUnique({ where: { email: supabaseUser.email } }),
   ]);
 
-  const inWatchlist = await prisma.watchlist.findUnique({
-    where: { userId_movieId: { userId: prismaUser.id, movieId: Number(id) } },
-  });
+  const [inWatchlist, inWatchLater] = await Promise.all([
+    prisma.watchlist.findUnique({
+      where: { userId_movieId: { userId: prismaUser.id, movieId: Number(id) } },
+    }),
+    prisma.watchLater.findUnique({
+      where: { userId_movieId: { userId: prismaUser.id, movieId: Number(id) } },
+    }),
+  ]);
 
   const comments = await prisma.comment.findMany({
     where: { movieId: Number(id) },
@@ -46,6 +51,7 @@ export default async function MoviePage({ params }) {
         movie={movie}
         runtime={runtime}
         inWatchlist={!!inWatchlist}
+        inWatchLater={!!inWatchLater}
         userId={prismaUser.id}
       />
 

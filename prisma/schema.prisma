@@ -8,14 +8,27 @@ datasource db {
 }
 
 model User {
-  id        String      @id @default(cuid())
-  email     String      @unique
-  createdAt DateTime    @default(now())
-  watchlist Watchlist[]
-  comments  Comment[]
+  id         String       @id @default(cuid())
+  email      String       @unique
+  createdAt  DateTime     @default(now())
+  watchlist  Watchlist[]
+  watchLater WatchLater[]
+  comments   Comment[]
 }
 
 model Watchlist {
+  id          String   @id @default(cuid())
+  userId      String
+  movieId     Int
+  movieTitle  String
+  moviePoster String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId])
+}
+
+model WatchLater {
   id          String   @id @default(cuid())
   userId      String
   movieId     Int
