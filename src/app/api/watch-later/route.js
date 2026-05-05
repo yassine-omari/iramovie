@@ -7,6 +7,15 @@ export async function POST(req) {
     const item = await prisma.watchLater.create({
       data: { userId, movieId, movieTitle, moviePoster },
     });
+    await prisma.activity.create({
+      data: {
+        userId,
+        type: "WATCH_LATER_ADD",
+        movieId,
+        movieTitle,
+        moviePoster,
+      },
+    });
     return NextResponse.json(item);
   } catch {
     return NextResponse.json(
@@ -27,13 +36,3 @@ export async function DELETE(req) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 }
-
-await prisma.activity.create({
-  data: {
-    userId,
-    type: "WATCH_LATER_ADD",
-    movieId,
-    movieTitle,
-    moviePoster,
-  },
-});

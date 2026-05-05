@@ -7,6 +7,16 @@ export async function POST(req) {
     const comment = await prisma.comment.create({
       data: { userId, movieId, content, userName },
     });
+    await prisma.activity.create({
+      data: {
+        userId,
+        type: "COMMENT",
+        movieId,
+        movieTitle: "",
+        moviePoster: null,
+      },
+    });
+
     return NextResponse.json(comment);
   } catch {
     return NextResponse.json(
@@ -34,13 +44,3 @@ export async function DELETE(req) {
     );
   }
 }
-
-await prisma.activity.create({
-  data: {
-    userId,
-    type: "COMMENT",
-    movieId,
-    movieTitle: "",
-    moviePoster: null,
-  },
-});
