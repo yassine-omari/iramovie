@@ -2,6 +2,7 @@ import Hero from "../components/hero";
 import MovieRow from "../components/movieRow";
 import TagLine from "../components/tagline";
 import Genres from "../components/genres";
+import ActivityFeed from "../components/activityFeed";
 
 import {
   getPopularMovies,
@@ -40,6 +41,8 @@ export default async function HomePage() {
       />
       <div className="mx-4 md:mx-10 border-t border-white/5" />
       <Genres genres={genresData.genres ?? []} />
+      <div className="mx-4 md:mx-10 border-t border-white/5" />
+      <ActivityFeed />
       <TagLine />
     </main>
   );

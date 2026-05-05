@@ -7,6 +7,7 @@ import { createClient } from "../../../lib/client";
 const SignupPage = () => {
   const router = useRouter();
   const supabase = createClient();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -15,26 +16,32 @@ const SignupPage = () => {
 
   const handleOauth = async (provider) => {
     await supabase.auth.signInWithOAuth({
-      provider: provider,
+      provider,
       options: { redirectTo: `${location.origin}/auth/callback` },
     });
   };
 
-  const handleEmaillogin = async (e) => {
+  const handleEmailSignup = async (e) => {
     e.preventDefault();
+    if (!name.trim()) {
+      setError("Please enter your name.");
+      return;
+    }
     setLoading(true);
     setError("");
     setMessage("");
-    const { data, error } = await supabase.auth.signUp({ email, password });
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: name.trim() },
+      },
+    });
 
     if (error) {
       setError(error.message);
-    } else if (
-      data.user &&
-      data.user.identities &&
-      data.user.identities.length === 0
-    ) {
-      // Duplicate — user already exists but Supabase won't tell you directly
+    } else if (data.user?.identities?.length === 0) {
       setError(
         "An account with this email already exists. Please sign in instead.",
       );
@@ -47,10 +54,6 @@ const SignupPage = () => {
   return (
     <section className="flex items-center justify-center min-h-screen bg-[#0a0a0a]">
       <div className="w-95 p-10 bg-[#111] border border-[#222] rounded-2xl">
-        {/* Logo */}
-        {/* <p className="font-serif italic text-white text-xl mb-7">acme.</p> */}
-
-        {/* Heading */}
         <h1 className="text-2xl font-medium text-white tracking-tight">
           Create an account
         </h1>
@@ -65,7 +68,7 @@ const SignupPage = () => {
         >
           <img
             src="https://images.shadcnspace.com/assets/svgs/icon-google.svg"
-            alt="google icon"
+            alt="google"
             className="h-4 w-4"
           />
           Continue with Google
@@ -76,20 +79,33 @@ const SignupPage = () => {
         >
           <img
             src="https://images.shadcnspace.com/assets/svgs/icon-github.svg"
-            alt="github icon"
-            className=" bg-white rounded-full  h-4 w-4"
+            alt="github"
+            className="bg-white rounded-full h-4 w-4"
           />
           Continue with GitHub
         </button>
 
-        {/* Divider */}
         <div className="flex items-center gap-3 my-5">
           <div className="flex-1 h-px bg-[#222]" />
           <span className="text-xs text-[#444]">or continue with email</span>
           <div className="flex-1 h-px bg-[#222]" />
         </div>
 
-        {/* Fields */}
+        {/* Name */}
+        <div className="mb-3.5">
+          <label className="block text-xs text-[#666] font-medium mb-1.5">
+            Full Name
+          </label>
+          <input
+            type="text"
+            placeholder="John Doe"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full px-3.5 py-3 bg-[#141414] border border-[#242424] rounded-xl text-[#e0e0e0] text-sm placeholder-[#3a3a3a] outline-none focus:border-[#444] transition-colors"
+          />
+        </div>
+
+        {/* Email */}
         <div className="mb-3.5">
           <label className="block text-xs text-[#666] font-medium mb-1.5">
             Email
@@ -97,10 +113,13 @@ const SignupPage = () => {
           <input
             type="email"
             placeholder="example@gmail.com"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-3.5 py-3 bg-[#141414] border border-[#242424] rounded-xl text-[#e0e0e0] text-sm placeholder-[#3a3a3a] outline-none focus:border-[#444] transition-colors"
           />
         </div>
+
+        {/* Password */}
         <div className="mb-1.5">
           <label className="block text-xs text-[#666] font-medium mb-1.5">
             Password
@@ -108,35 +127,31 @@ const SignupPage = () => {
           <input
             type="password"
             placeholder="••••••••••"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-3.5 py-3 bg-[#141414] border border-[#242424] rounded-xl text-[#e0e0e0] text-sm placeholder-[#3a3a3a] outline-none focus:border-[#444] transition-colors"
           />
         </div>
-        {/* errors */}
 
         {error && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mt-2">
             {error}
           </p>
         )}
-
-        {/* messages */}
-
         {message && (
-          <p className="text-sm text-green-600 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+          <p className="text-sm text-green-600 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mt-2">
             {message}
           </p>
         )}
 
-        {/* Submit */}
         <button
-          onClick={handleEmaillogin}
-          className="w-full mt-2 py-3 bg-white text-[#0a0a0a] rounded-xl text-sm font-medium hover:bg-[#e8e8e8] transition-colors cursor-pointer"
+          onClick={handleEmailSignup}
+          disabled={loading}
+          className="w-full mt-4 py-3 bg-white text-[#0a0a0a] rounded-xl text-sm font-medium hover:bg-[#e8e8e8] transition-colors cursor-pointer disabled:opacity-50"
         >
-          {loading ? "...Loading" : "Sign up"}
+          {loading ? "Loading..." : "Sign up"}
         </button>
 
-        {/* Footer */}
         <p className="mt-5 text-center text-sm text-[#444]">
           Already have an account?{" "}
           <button

@@ -8,12 +8,16 @@ datasource db {
 }
 
 model User {
-  id         String       @id @default(cuid())
-  email      String       @unique
-  createdAt  DateTime     @default(now())
-  watchlist  Watchlist[]
-  watchLater WatchLater[]
-  comments   Comment[]
+  id          String       @id @default(cuid())
+  email       String       @unique
+  name        String?
+  createdAt   DateTime     @default(now())
+  watchlist   Watchlist[]
+  watchLater  WatchLater[]
+  comments    Comment[]
+  following   Follow[]     @relation("Follower")
+  followers   Follow[]     @relation("Following")
+  activities  Activity[]
 }
 
 model Watchlist {
@@ -48,4 +52,26 @@ model Comment {
   userName  String
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String
+  movieId     Int
+  movieTitle  String
+  moviePoster String?
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

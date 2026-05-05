@@ -16,7 +16,6 @@ function MovieCard({ movie }) {
           alt={movie.movieTitle}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       <p className="text-white text-xs font-medium mt-2 line-clamp-2 leading-snug">
         {movie.movieTitle}
@@ -27,14 +26,14 @@ function MovieCard({ movie }) {
 
 function EmptyState({ message }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
+    <div className="flex flex-col items-center justify-center py-12 text-center">
       <span className="text-4xl mb-3">🎬</span>
       <p className="text-gray-500 text-sm">{message}</p>
     </div>
   );
 }
 
-export default async function LibraryPage() {
+export default async function ProfilePage() {
   const supabase = await createClient();
   const {
     data: { user: supabaseUser },
@@ -46,15 +45,63 @@ export default async function LibraryPage() {
     include: {
       watchlist: { orderBy: { createdAt: "desc" } },
       watchLater: { orderBy: { createdAt: "desc" } },
+      following: true,
+      followers: true,
     },
   });
 
+  const name =
+    supabaseUser.user_metadata?.full_name ??
+    supabaseUser.user_metadata?.name ??
+    supabaseUser.email.split("@")[0];
+
+  const avatarUrl = supabaseUser.user_metadata?.avatar_url;
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
   const watchlist = prismaUser?.watchlist ?? [];
   const watchLater = prismaUser?.watchLater ?? [];
+  const followingCount = prismaUser?.following?.length ?? 0;
+  const followersCount = prismaUser?.followers?.length ?? 0;
 
   return (
     <div className="min-h-screen px-4 md:px-10 py-8">
-      <h1 className="text-white text-2xl font-bold mb-8">My Library</h1>
+      {/* Profile header */}
+      <div className="flex items-center gap-5 mb-10">
+        {avatarUrl ? (
+          <img
+            src={avatarUrl}
+            alt={name}
+            className="w-20 h-20 rounded-full object-cover ring-2 ring-white/10"
+          />
+        ) : (
+          <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+            {initials}
+          </div>
+        )}
+        <div>
+          <h1 className="text-white text-2xl font-bold">{name}</h1>
+          <p className="text-gray-500 text-sm mb-3">{supabaseUser.email}</p>
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-white font-semibold">
+              {followersCount}{" "}
+              <span className="text-gray-500 font-normal">followers</span>
+            </span>
+            <span className="text-white font-semibold">
+              {followingCount}{" "}
+              <span className="text-gray-500 font-normal">following</span>
+            </span>
+            <span className="text-white font-semibold">
+              {watchlist.length}{" "}
+              <span className="text-gray-500 font-normal">watchlist</span>
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* Watchlist */}
       <section className="mb-12">

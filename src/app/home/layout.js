@@ -10,10 +10,17 @@ export default async function HomeLayout({ children }) {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+
+  const name =
+    user.user_metadata?.full_name ??
+    user.user_metadata?.name ??
+    user.email.split("@")[0];
+
+  // Upsert user with name
   await prisma.user.upsert({
     where: { email: user.email },
-    update: {},
-    create: { email: user.email },
+    update: { name },
+    create: { email: user.email, name },
   });
 
   return (

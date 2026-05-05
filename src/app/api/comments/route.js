@@ -34,3 +34,13 @@ export async function DELETE(req) {
     );
   }
 }
+
+await prisma.activity.create({
+  data: {
+    userId,
+    type: "COMMENT",
+    movieId,
+    movieTitle: "",
+    moviePoster: null,
+  },
+});

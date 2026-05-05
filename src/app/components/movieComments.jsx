@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 function timeAgo(date) {
   const diff = Date.now() - new Date(date).getTime();
@@ -110,9 +111,12 @@ export default function MovieComments({
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-white text-sm font-medium">
+                    <Link
+                      href={`/home/profile/${comment.userId}`}
+                      className="text-white text-sm font-medium hover:text-blue-400 transition-colors"
+                    >
                       {comment.userName}
-                    </span>
+                    </Link>
                     <span className="text-gray-600 text-xs">
                       {timeAgo(comment.createdAt)}
                     </span>

@@ -58,17 +58,6 @@ export default function Navbar({ user }) {
     window.location.href = "/login";
   }
 
-  const handleSearch = async (query) => {
-    const res = await fetch(
-      `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
-    );
-    const data = await res.json();
-    const topResult = data.results?.[0];
-    if (topResult) {
-      router.push(`/home/movie/${topResult.id}`);
-    }
-  };
-
   const name =
     user?.user_metadata?.full_name ??
     user?.user_metadata?.name ??
@@ -111,7 +100,7 @@ export default function Navbar({ user }) {
 
         {/* Search bar — desktop only */}
         <div className="hidden md:flex flex-1 px-8">
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar />
         </div>
 
         {/* Search icon — mobile only */}
@@ -186,10 +175,10 @@ export default function Navbar({ user }) {
                   </p>
                 </div>
                 <Link
-                  href="/home/library"
+                  href="/home/profile"
                   className="block w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-white/10 transition-colors duration-150 font-medium"
                 >
-                  My Library
+                  My Profile
                 </Link>
                 <button
                   onClick={handleSignOut}

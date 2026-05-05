@@ -27,3 +27,13 @@ export async function DELETE(req) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 }
+
+await prisma.activity.create({
+  data: {
+    userId,
+    type: "WATCHLIST_ADD",
+    movieId,
+    movieTitle,
+    moviePoster,
+  },
+});
